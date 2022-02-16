@@ -1,0 +1,42 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+RWBuffer<float> DensityBuffer;
+float r; // Radius
+uint rc; // Radius ceiled
+uint textureSize; // Chunk with extra
+int3 pi; // Point to int
+float bs;
+bool remove;
+
+int toIndex(int x, int y, int z){
+    return x + y * textureSize + z * textureSize * textureSize;
+}
+int toIndex(int3 coord){
+	return coord.x + textureSize * coord.y + textureSize * textureSize * coord.z;
+}
+
+[numthreads(4,4,4)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int3 index = int3(id) + pi + int3(1,1,1);
+    int3 circle = int3(id) - rc;
+    if(index.x - rc < 0 || index.y - rc < 0 || index.z - rc < 0 ||
+       index.x - rc > textureSize || index.y - rc > textureSize || index.z - rc > textureSize)
+        return;
+   
+    if(remove){
+        DensityBuffer[toIndex(index - rc)] = clamp(
+            DensityBuffer[toIndex(index - rc)] - 
+            bs*clamp(1 - sqrt(circle.x*circle.x + circle.y*circle.y + circle.z*circle.z)/r ,0.,1.),
+            0.,1.);
+    }else{
+        DensityBuffer[toIndex(index - rc)] = clamp(
+            DensityBuffer[toIndex(index - rc)] + 
+            bs*clamp(1 - sqrt(circle.x*circle.x + circle.y*circle.y + circle.z*circle.z)/r ,0.,1.),
+            0.,1.);
+    }
+}

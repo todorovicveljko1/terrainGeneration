@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 114b253ab2db23248897f046fbbfba5e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - NoiseCompute: {instanceID: 0}
+  - MarchCubeCompute: {instanceID: 0}
+  - terrainShading: {fileID: 11400000, guid: 8de5ba394d4b53a40850d3ade5adf2d2, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
